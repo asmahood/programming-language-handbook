@@ -42,13 +42,7 @@ int age = 22;
 | double    | 64          | 0.0d                       | Stores floating point numbers with 15 digits of precision  |
 | boolean   | N/A         | false                      | Holds either `true` or `false`                             |
 | char      | 16          | '\u0000'                   | Stores a single character, including letters and ASCII     |
-|-----------|-------------|----------------------------|------------------------------------------------------------|
 
 ### Reference/Object Data Types
 Objects are data types that have built-in behaviour.
-
-#### String
-Hold a sequence of characters. Can be created in two ways:
-- Using a literal: `String greeting = "hello world";`
-- Calling the constructor of the string class: `String greeting = new String("Hello world");`
 
