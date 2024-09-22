@@ -46,3 +46,12 @@ int age = 22;
 ### Reference/Object Data Types
 Objects are data types that have built-in behaviour.
 
+## Constant Variables
+To declare a variable with a value that cannot be manipulated (constant), use the `final` keyword as so.
+```java
+final int yearBorn = 1968;
+```
+Attempting to change this variable will give the following error
+```
+error: cannot assign a value to final variable yearBorn
+```
