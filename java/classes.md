@@ -81,6 +81,7 @@ public class Car {
     public Car() {}
 }
 ```
+
 ### Assigning values to instance fields
 Fields can be set in three ways:
 - If a field is `public`, they can be set like `instanceName.fieldName = someValue;`
@@ -92,7 +93,49 @@ A method is characterized by its **signature** (name, number of, and parameters 
 - Formal parameters: variables that will store data that is passed into a method. It specifies the type and name of the data.
 - Actual parameters:
 
-When passing arguments, a copy of the argument value is passed to the parameter rather than the actual variables. This is called **call-by-value**.
+When passing arguments, a copy of the argument value is passed to the parameter rather than the actual variables. This is called **call by value**.
 
 ### Defining methods
+
+To define a method, you need three things:
+1. The visibility (`public`, `private`, etc.)
+2. The return type (`void`, `int`, etc.)
+3. The name of the method
+
+```java
+public void checkBalance() {}
+```
+
+### Calling methods
+Non-static methods are available to be called on instances of the class.
+
+### Adding parameters
+Similar to constructors, parameters are added by including the datatype followed by the parameter name in the method declaration.
+
+#### Method Overloading
+Method overloading is possible in Java by creating two methods with the same name, however the method signatures must be different.
+
+### Returning values from methods
+You can return a value from a method using the `return` keyword. THis will exit the execution of the method. The value returned must match the return type designated by the methods return type. When returning a primitive datatype, a copy of the value will get returned, which is known as **return by value**. When an object is returned, a **reference** to the object is returned instead of a copy of it.
+
+## Printing Objects
+If you were to print an object, you would get something like `Car@6bc7c054`, which is the address of the location in memory where the object is stored. If we wanted to print something more descriptive, we can add a `toString()` method to our class which returns a `String`. This will be printed instead. For example:
+```java
+class Car {
+    String color;
+
+    public Car(String carColor) {
+        color = carColor;
+    }
+
+    public static void main(String[] args){
+        Car myCar = new Car("red");
+        System.out.println(myCar);
+    }
+
+   public String toString(){
+       return "This is a " + color + " car!";
+   }
+}
+```
 

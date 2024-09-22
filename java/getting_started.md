@@ -38,6 +38,11 @@ After compiling, you can run the file by using the command
 java MyClass
 ```
 
+To pass arguments, add them after the name of the class.
+```bash
+java MyClass Arg1
+```
+
 Since Java SE 11, you can run a Java application without compiling as long as the program is a single file. Using the command
 
 ```bash

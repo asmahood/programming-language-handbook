@@ -35,3 +35,12 @@ The order of operations for arithmetic operators is defined below. Operators tha
 
 *Note: equality of objects cannot be checked using the `==` operator. To compare objects, use the `.equals()` method.*
 
+## Conditional Operators
+
+| Operator Name | Symbol | Example | Description |
+|---------------|:------:|---------|-------------|
+| AND           | &&     | a && b  | Evaluates to true if both `a` and `b` are true, otherwise it evaluates to false |
+| OR            | ||     | a || b  | Evaluates to true if either `a` or `b` are true, otherwise it evaluates to false |
+| NOT           | !      | !a      | Evluates to true if `a` is false, and false if `a` is true |
+
+You can control the evaluation of conditions by surrounding them in `()`. Conditions in `()` will be evaluated first.
