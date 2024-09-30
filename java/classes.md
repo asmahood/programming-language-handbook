@@ -8,6 +8,19 @@ public class Car {
 }
 ```
 
+## Defining Access
+Defining access means defining what parts of a class other classes can access/call. You can define access on:
+- Instance variables
+- Methods
+- Constructors
+- Classes themselves
+
+### Public
+If you declare something as `public`, this means any class can access/call this part of the code. To declare something as public, place the `public` keyword at the start of the declaration/definition/function signature.
+
+### Private
+When a instance variable or method is marked as `private`, then these variables/methods can only be accessed/called within the same class.i
+
 ## Defining a Constructor
 A constructor is a special method defined within the class used to initialize the fields when creating an instance. The constructor must be the same name as class itself. Generally, constructors are defined as `public`.
 
@@ -117,6 +130,62 @@ Method overloading is possible in Java by creating two methods with the same nam
 
 ### Returning values from methods
 You can return a value from a method using the `return` keyword. THis will exit the execution of the method. The value returned must match the return type designated by the methods return type. When returning a primitive datatype, a copy of the value will get returned, which is known as **return by value**. When an object is returned, a **reference** to the object is returned instead of a copy of it.
+
+### Accessor and Mutator Methods
+To support encapsulation, we often make our instance variables private. To let other classes access a private instance variable, we write **accessor** methods (also known as getters).
+```java
+public class Dog {
+  private String name;
+    
+  //Other methods and constructors
+
+  public String getName() {
+    return name;
+  }
+}
+```
+Private instance variables often have **mutator** methods (also known as setters) which allow other classes to change the stored value in a private instance variable. These methods are often marked as `void` and only have one parameter.
+
+```java
+public class Dog {
+    private String name;
+
+    pubic void setName(String newName) {
+        name = newName;
+    }
+}
+```
+
+## The `This` Keyword
+The `this` keyword is a reference to the current object. It can be used to get the current objects instance variable, call methods, or passed as a parameter. It is particularly useful when parameters of a method have the same name as an instance variable, so you can use the `this` keyword to specify the instance variable. By default, Java will use the parameter. It is also useful for being more clear about what the thing you are refering to comes from.
+```java
+public class Computer {
+  public int brightness;
+  public int volume;
+  
+  public void setBrightness(int inputBrightness){
+    this.brightness = inputBrightness;
+  }
+
+  public void setVolume(int inputVolume){
+    this.volume = inputVolume;
+  }
+
+  public void resetSettings(){
+    this.setBrightness(0);
+    this.setVolume(0);
+  }
+
+  public void pairWithOtherComputer(Computer other){
+      // Code for method that uses the parameter other
+  }
+
+  public void setUpConnection(){
+    // We use "this" to call the method and also pass "this" to the method so it can be used in that method
+    this.pairWithOtherComputer(this);
+  }
+}
+```
 
 ## Printing Objects
 If you were to print an object, you would get something like `Car@6bc7c054`, which is the address of the location in memory where the object is stored. If we wanted to print something more descriptive, we can add a `toString()` method to our class which returns a `String`. This will be printed instead. For example:
