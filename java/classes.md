@@ -211,6 +211,95 @@ public class Dog{
 ```
 One important note is that static methods cannot interact with non-staic instance variables.
 
+## Inheritance
+To define a child class of another class, we use the `extends` keyword in the class definition:
+```java
+class Shape {
+
+  // Shape class members
+
+}
+
+class Triangle extends Shape {
+
+  // additional Triangle class members
+
+}
+```
+
+### Inheriting Constructors / Methods
+To call the constructor of the parent class, we use the `super()` method:
+```java
+class Triangle extends Shape {
+
+  Triangle() {
+    super(3);
+  }
+
+  // additional Triangle class members
+
+}
+```
+Note that you do not need to use the `super()` method. Instead you could initialize all of the parent's class fields in the child's class constructor.
+
+The `super` keyword can also be used to call methods from the parent class. This is useful if we are in a situation where we want to use a base class' method instead of an overridden method.
+
+### Accessibility of Inherited Properites
+There are 3 different accessibility keywords that give varying levels of access of the parents class fields:
+| Modifier | Class | Package | Child Class | Global |
+|----------|:-----:|:-------:|:-----------:|:------:|
+| `public` | YES   | YES     | YES         | YES    |
+| `protected` | YES | YES | YES | NO |
+| no modifier | YES | YES | NO | NO |
+| `private` | YES | NO | NO | NO |
+
+You can use the `protected` keyword as so:
+```java
+class Shape {
+
+  protected double perimeter;
+
+}
+// any child class of Shape can access perimeter
+```
+
+You can also use the `final` keyword from changing a method in the parent class.
+
+## Polymorphism
+
+### Method Overriding
+To override a method from a parent class in a child class, we need to use the `@Override` annotation. The method name, return type, and number and types of parameters needs to be the same.
+```java
+class BankAccount {
+  protected double balance;
+
+  public BankAccount(double balanceIn){
+    balance = balanceIn;
+  }
+
+  public void printBalance() {
+    System.out.println("Your account balance is $" + balance);
+  }
+}
+
+class CheckingAccount extends BankAccount {
+  
+  public CheckingAccount(double balance) {
+    super(balance);
+  }
+
+  @Override
+  public void printBalance() {
+    System.out.println("Your checking account balance is $" + balance);
+  }
+}
+```
+
+Note that method overriding is handled at runtime, so if you have call a child override method on an instance of child class that was stored in a parent class variable, the overridden method will be used. However, you cannot use child specific methods, since the compiler things the child is an instance of the parent class.
+
+### Child Classes in Method Parameters
+If a method contains a parameter that expects a parent class, you can pass any child classes as arguments.
+
 ## Printing Objects
 If you were to print an object, you would get something like `Car@6bc7c054`, which is the address of the location in memory where the object is stored. If we wanted to print something more descriptive, we can add a `toString()` method to our class which returns a `String`. This will be printed instead. For example:
 ```java
