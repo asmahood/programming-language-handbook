@@ -55,3 +55,10 @@ Attempting to change this variable will give the following error
 ```
 error: cannot assign a value to final variable yearBorn
 ```
+
+## Type Casting
+If you want to cast from one type to another, you need to use the casting operator `(type)`. For example:
+```java
+int b = (int)(Math.random() * 10);
+```
+This will cast the `double` value returned by `Math.random()` to an `int`.

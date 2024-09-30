@@ -187,6 +187,30 @@ public class Computer {
 }
 ```
 
+## Static Methods and Variables
+Static methods and variables belong to an entire class, not a specific instance. They can be accessed/called using the class name and the `.` operator. To declare a variable/method as static, add the `static` keyword after the accessiblity keyword.
+```java
+public class Dog{
+
+  // Static variables
+  public static String genus = "Canis";
+
+  //Instance variables
+  public int age;
+  public String name;
+
+  public Dog(int inputAge, String inputName){
+    this.age = inputAge;
+    this.name = inputName;
+  }
+
+  public static String getGenus() {
+    return Dog.genus;
+  }
+}
+```
+One important note is that static methods cannot interact with non-staic instance variables.
+
 ## Printing Objects
 If you were to print an object, you would get something like `Car@6bc7c054`, which is the address of the location in memory where the object is stored. If we wanted to print something more descriptive, we can add a `toString()` method to our class which returns a `String`. This will be printed instead. For example:
 ```java
