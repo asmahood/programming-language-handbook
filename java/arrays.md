@@ -10,7 +10,7 @@ To declare an array, provide the datatype followed by `[]`. For example
 ```java
 double[] prices; // Creates an array of doubles
 ```
-You can also declare and initialize on the same line as so
+You can also declare and initialize on the same line using an initializer list.
 ```java
 double[] prices = {13.15, 15.87, 14.22, 16.66};
 ```
