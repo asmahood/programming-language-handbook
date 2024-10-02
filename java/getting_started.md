@@ -49,19 +49,6 @@ Since Java SE 11, you can run a Java application without compiling as long as th
 java MyClass.java
 ```
 
-## Printing to output
-To print one line at a time:
-```java
-System.out.println("string")
-```
-Note that this will start whereever the programs "cursor" currently is and add a newline character at the end.
-
-To print without starting a new line:
-```java
-System.out.print("string")
-```
-Note that this will leave the cursor at the end of the character 'g', so any subsequent prints will start after.
-
 ## Java Syntax
 
 ### Comments
