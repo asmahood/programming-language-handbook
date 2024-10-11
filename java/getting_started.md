@@ -49,6 +49,27 @@ Since Java SE 11, you can run a Java application without compiling as long as th
 java MyClass.java
 ```
 
+#### Running a Java Application with Multiple Files
+You must compile all files as so:
+```bash
+javac TransportBike.java
+javac TransportCar.java
+javac TransportationDriver.java
+
+# OR
+
+javac TransportBike.java TransportCar.java TransportationDriver.java
+
+# OR
+
+javac Transport*.java
+```
+Another method is to compile the file with the main class
+```bash
+javac TransportationDriver.java
+```
+This works because as the compiler reaches a definition that is unknown to it, such as the first instance of `TransportBike`, it will search the current folder for any `.class` files that match that signature. If no `.class` files are found, it will look for `.java` files and then attempt to compile them so that it knows how to represent the TransportBike object.
+
 ## Java Syntax
 
 ### Comments
