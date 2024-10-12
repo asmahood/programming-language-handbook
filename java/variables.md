@@ -32,16 +32,16 @@ int age = 22;
 ## Data Types
 
 ### Primitive Data Types
-| Data Type | Size (bits) | Default Value (for fields) | Description                                                |
-|-----------|-------------|----------------------------|------------------------------------------------------------|
-| byte      | 8           | 0                          | Represents whole numbers ranging from -128 to 127          |
-| short     | 16          | 0                          | Stores smaller whole numbers from -2^15 to 2^15 - 1        |
-| int       | 32          | 0                          | Represents whole numbers from -2^31 to 2^31 - 1            |
-| long      | 64          | 0L                         | Represents very large whole numbers from -2^63 to 2^63 - 1 |
-| float     | 32          | 0.0f                       | Stores floating point numbers with 7 digits of precision   |
-| double    | 64          | 0.0d                       | Stores floating point numbers with 15 digits of precision  |
-| boolean   | N/A         | false                      | Holds either `true` or `false`                             |
-| char      | 16          | '\u0000'                   | Stores a single character, including letters and ASCII     |
+| Data Type | Wrapper Class Name | Size (bits) | Default Value (for fields) | Description                                                |
+|-----------|--------------------|-------------|----------------------------|------------------------------------------------------------|
+| byte      | Byte | 8           | 0                          | Represents whole numbers ranging from -128 to 127          |
+| short     | Short | 16          | 0                          | Stores smaller whole numbers from -2^15 to 2^15 - 1        |
+| int       | Integer | 32          | 0                          | Represents whole numbers from -2^31 to 2^31 - 1            |
+| long      | Long | 64          | 0L                         | Represents very large whole numbers from -2^63 to 2^63 - 1 |
+| float     | Float | 32          | 0.0f                       | Stores floating point numbers with 7 digits of precision   |
+| double    | Double | 64          | 0.0d                       | Stores floating point numbers with 15 digits of precision  |
+| boolean   | Boolean | N/A         | false                      | Holds either `true` or `false`                             |
+| char      | Character | 16          | '\u0000'                   | Stores a single character, including letters and ASCII     |
 
 ### Reference/Object Data Types
 Objects are data types that have built-in behaviour.
