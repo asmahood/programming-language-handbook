@@ -118,3 +118,73 @@ public class StringBox {
 }
 StringBox.isString(5);  // Returns false
 ```
+
+## Type Upper Bounds
+If you want to restrict what classes or interfaces could be used as a type argument. To do this, use the `extends` keyword in the type parameter:
+```java
+public class Box <T extends Number> {
+  private T data;
+}
+```
+This examples means that `T` can be a `Number` or any of its subclasses (or interfaces). I.e.
+```java
+Box<Integer> intBox = new Box<>(2);  // Valid type argument
+Box<Double> doubleBox = new Box<>(2.5);  // Valid type argument
+Box<String> stringBox = new Box<>("hello");  // Error
+```
+
+### Specifying Multiple Bounds
+Java allows you to specify multiple bounds for a type parameter using the `&` operator:
+```java
+public class Box <T extends Number & Comparable<T>> {
+  private T data; 
+}
+```
+*Note: When specifying multiple bounds any upper bound that is a class must come first followed by any interfaces.*
+
+## Wildcards
+When you don't need the strict type checking of using type parameters, you can use **wildcards** (denoted by `?`). This represents an unknown type when used in generic methods.
+```java
+public class Util {
+  public static void printBag(Bag<?> bag) {
+    System.out.println(bag.toString()); 
+  }
+}
+Bag<String> myBag1 = new Bag("Hello");
+Bag<Integer> myBag2 = new Bag(23);
+Util.printBag(myBag1);  // Hello
+Util.printBag(myBag2);  // 23
+```
+This syntax is equivalent to:
+```java
+public static <T> void printBag(Bag<T> bag) {
+  System.out.println(bag.toString()); 
+}
+```
+In general, type parameters should be used when there is a relationship between the type of arguments and the return type.
+
+Upper and lower bounds can also be used with wildcards.
+
+### Lower Bounds
+A lower bound restricts a wildcard to a class or interface and any of its parent types:
+```java
+public class Util {
+  public static void getBag(Bag<? super Integer> bag) {
+    return bag;
+  }
+}
+```
+In the example above:
+- Used the `super` keyword to restrict the argument to `getBag` to be a `Bag` of `Integer`, `Number`, or `Object`.
+- If a call to `getBag` with `Bag<Double>` is made, it would result in an error
+  - This is because double is not an `Integer` or one of its parents.
+
+*Notes:
+- Lower bounds cannot be used with generic type parameters, only wildcards
+- A wildcard cannot have a lower bound **AND** an upperbound (best to use type parameter in this case) *
+
+**General Guidelines for Wildcards**
+- An upper bound wildcard should be used when the variable is being used to serve some type of data to our code
+- A lower bound wildcard should be used when the variable is receiving data and holding it for later use.
+- When a variable that serves data is used and only uses `Object` methods, an unbounded wildcard is preferred.
+- When a variable needs to serve data and store data for later use, a wildcard should not be used (use a type parameter instead).
