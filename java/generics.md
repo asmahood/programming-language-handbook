@@ -179,11 +179,11 @@ In the example above:
 - If a call to `getBag` with `Bag<Double>` is made, it would result in an error
   - This is because double is not an `Integer` or one of its parents.
 
-*Notes:
-- Lower bounds cannot be used with generic type parameters, only wildcards
-- A wildcard cannot have a lower bound **AND** an upperbound (best to use type parameter in this case) *
+*Notes:*
+- *Lower bounds cannot be used with generic type parameters, only wildcards*
+- *A wildcard cannot have a lower bound **AND** an upperbound (best to use type parameter in this case)*
 
-**General Guidelines for Wildcards**
+### General Guidelines for Wildcards
 - An upper bound wildcard should be used when the variable is being used to serve some type of data to our code
 - A lower bound wildcard should be used when the variable is receiving data and holding it for later use.
 - When a variable that serves data is used and only uses `Object` methods, an unbounded wildcard is preferred.
