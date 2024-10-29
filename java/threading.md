@@ -21,7 +21,7 @@ public class HugeProblemSolver extends Thread{
   @Override
   public void run(){
     solveComputation();
-    System.out.println("The answer is: 42");
+System.out.println("The answer is: 42");
   }
 
   public static void main(String[] args){
@@ -268,3 +268,101 @@ public class OrderDinnerProcess {
  }
 }
 ```
+
+## Virtual Threading
+To improve efficiency, virtual threads group several tasks and are executed on one platform thread instead of reserving one thread for each separate task. A task is mounted on a thread when it is ready to execute its function and is unmounted when it is awaiting an external response. When a task is unmounted the resources are released and allocated to another task that is ready to finish executing. With this mechanism, every task behaves as if it were its own thread (hence the **virtual thread**). The Java Virtual Machine handles thr grouping, mounting, and unmounting of the tasks on a platform thread.
+
+To start a virtual thread:
+```java
+Thread.ofVirtual().start(Runnable someThread);
+```
+Since virtual threads belong to the `Thread` class, we can use `join` to block a parent thread from exiting until a child thread has completed executing as we would for a traditional platform thread. For example, the following code will run 10,000 threads:
+```java
+public class SoManyThreads { 
+  public static void main(String[] args) { 
+    int numberOfThreads = 10000; 
+    for (int i = 0; i < numberOfThreads; i++) { 
+      Thread thread = Thread.ofVirtual().start(new Runnable() { 
+        @Override 
+        public void run() { 
+          System.out.println(Thread.currentThread().threadId() + " is running"); 
+        } 
+      }); 
+    } 
+  } 
+} 
+```
+Since many threads run on one platform thread, `Thread.currentThread().threadId()` will print out the ID of the virtual thread's parent platform thread. The previous code created virtual threads and ran them immediately because of the call to `start`. To create virtual threads now and start them later:
+```java
+public class SoManyThreads { 
+  public static void main(String[] args) { 
+    int numberOfThreads = 10000; 
+    for (int i = 0; i < numberOfThreads; i++) { 
+      Thread thread = Thread.ofVirtual().unstarted(new Runnable() { 
+        @Override 
+        public void run() { 
+          System.out.println(Thread.currentThread().threadId() + " is running"); 
+        } 
+      }); 
+    } 
+  } 
+} 
+```
+We can start running all of the threads by calling the `start` method:
+```java
+thread.start();
+```
+
+### Using Structured Concurrency with Virtual Threads
+Concurrency is implemented using the `ExecutorService` class. For example:
+```java
+public class ConcurrencyExample { 
+  public static void main(String[] args) { 
+    ExecutorService executorService = Executors.newFixedThreadPool(3); 
+    // We can assume the fetch functions have the relevant information of a user. 
+    Future<String> userName = executorService.submit(fetchUserName()); 
+    Future<String> userID = executorService.submit(fetchUserID()); 
+    Future<String> orderNumber = executorService.submit(fetchOrderNumber()); 
+    executorService.shutdown(); 
+    // Get results from the completed tasks 
+    try { 
+      String result1 = userName.get(); 
+      String result2 = userID.get(); 
+      String result3 = orderNumber.get(); 
+    } catch (InterruptedException | ExecutionException e) { 
+      e.printStackTrace(); 
+    } 
+  } 
+} 
+```
+This is a form of unstructured concurrency. Fetching a user's username, ID, and order number can be independent operations. However, the followinbg problem exists: if, for some reason, the user does not have a registered `userName` (meaning they are not registered on the site), the tasks of `fetchID` and `fetchOrder` will continue to execute in search of information for a non-existent user thereby wasting time and other resources. This inherent problem of unstructured concurrency leads to code that is hard to maintain and debug. To fix this problem, it is preferable to use structured concurrency instead. Structured concurrency combines the benefits of a consecutive code (if one step fails, the whole code fails) with the time-saving benefits of running concurrent code.
+
+Virtual threads are excellent candidates for running structured concurrency as they can run several tasks on one platform thread. Virtual threads are used for structured concurrency by using the following Java code: 
+```java
+Executors.newVirtualThreadPerTaskExecutor()
+```
+The previous code refactored to use structured concurrency via virtual threads:
+```java
+public class ConcurrencyExample{ 
+  public static void main(String[] args) { 
+    try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) { 
+      // We can assume the fetch functions have the relevant information of a user 
+      Future<String> userName = executorService.submit(fetchUserName()); 
+      Future<String> userID = executorService.submit(fetchUserID()); 
+      Future<String> orderNumber = executorService.submit(fetchOrderNumber()); 
+    } 
+  } 
+} 
+```
+
+### Sharing Data using Scoped Values
+While tasks are running, there may be a case where data between threads must be shared. In concurrent programming, the way to do this was to use a `ThreadLocal` variable. A `ThreadLocal` variable is a public static variable that belongs to the class, but a separate instance of which is created in each thread. The problem with a `ThreadLocal` variable used in virtual threads is that because virtual threads allow the creation of many threads, there will consequently be many instances of a `ThreadLocal` variable, rendering them to unmanageable due to their amount. To solve this problem, it is preferable to use a `ScopedValue` variable instead. A `ScopedValue` variable belongs to the class and does not allow the creation of multiple instances of itself.
+
+To use a `ScopedValue` variable, syntax similar to the following should be added to any code using virtual threads:
+```java
+private static final ScopedValue<String> someString = ScopedValue.newInstance(); 
+ScopedValue.where(someString, "StringValue", virtualThread);
+```
+
+### Advantages and Disadvantages of Virtual Threads
+Virtual threads have proven to be helpful in applications where several tasks are slated to run concurrently, and each task awaits some form of external response, such as IO or a network call. However, there are situations in which a virtual thread cannot be used. In the case where a thread must run some form of complex calculation, it does not make sense to use a virtual thread because the task will not be idle as the CPU is under constant use. When this is the case, there is no other choice but to rely on a standard platform thread. A second scenario when a virtual thread can’t be used is when a task executes a `synchronized` block of code. A `synchronized` block of code prevents other threads from accessing a specific piece of data in the interest of protecting it from being incorrectly processed. When a virtual thread executes `synchronized` code, the virtual thread cannot be unmounted until the block of code is finished executing, even if the thread is idle. When this happens, we say the virtual thread is pinned to the parent platform thread. When this is the case, we lose the advantages we gain from unmounting an idle thread. In this case, we again are forced to use standard platform threads. 
