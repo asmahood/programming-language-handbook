@@ -321,3 +321,136 @@ class Car {
 }
 ```
 
+## Nested Classes
+The process of nesting one class inside another class is known as **encapsulation**.  They allow us to rationally organize and group classes that may be closely related.
+
+There are two types of nested classes: **non-static (inner)** and **static** nested classes. The type of nested class determines whetehr it has access to other elements (static and non-static) within its encapsulating class. 
+
+### Non-Static vs. Static
+| Non-Static | Static |
+| ---------- | ------ |
+| To reference a non-static nested class outside its scope, also need to reference its encompassing class | Only have access to other static members of the encompassing class |
+| Have access to both static and non-static members of encompassing class | Can be instantiated independent of an object of their encompasssing class |
+| Can only be instantiated after and with reference to an object of its encompassing class | Cannot access any other non-statiuc members of the Java program. |
+
+### Implementing Non-Static Nested Classes
+To declare a non-static nested class within an outer class:
+```java
+class Outer {
+  String outer;
+  // Assign values using constructor
+  public Outer(String name) {
+    this.outer = name;
+  }
+
+  // private method
+  private String getName() {
+    return this.outer;
+  }
+    
+  // Non-static nested class
+  class Inner {
+    String inner;
+    String outer;
+  }
+}
+```
+
+To instantiate a non-static nested class:
+```java
+Outer outer = new Outer();
+
+// Then instantiate inner
+
+Outer.Inner inner = outer.new Inner();
+```
+
+Below is an example of how a non-static class can access other static and non-static classes from the outer class.
+```java
+// Non-static nested class
+class Inner {
+  String inner;
+  String outer;
+  public String getOuter() {
+  // Instantiate outer class to use its method
+  outer = Outer.this.getName();
+}
+```
+
+### Implementing Static Nested Classes
+Static nessed classes are helpful because they allow related calsses to be grouped under an enclosing class. To implement a static nested class:
+```java
+class Toolbox{  
+  public static String toolboxName = "Awesome Toolbox";
+  public String ownerName;
+
+  static class Saw{
+    public void cut(){
+      System.out.println("Cutting...");
+    }
+  }
+    
+  static class TapeMeasure{
+    public void measure(){
+      System.out.println("Measuring...");
+    }
+  }
+
+  static class Wrench{
+    public void tighten(){
+      System.out.println("Tightening...");
+    }
+
+    public void loosen(){
+      System.out.println("Loosening...");
+    }
+  }
+}
+```
+To use a nested class:
+```java
+public class Main{
+  public static void main(String[] args) {
+    Toolbox.Saw petersSaw = new Toolbox.Saw();
+    Toolbox.MeasuringTape amysMeasuringTape = new Toolbox.MeasuringTape();
+    Toolbox.Wrench randomWrench = new Toolbox.Wrench();
+
+    petersSaw.cut(); // output: Cutting...
+    amysMeasuringTape.measure(); // output: Measuring...
+    randomWrench.tighten(); // output: Tightening...
+}
+```
+Static nested classes can access static variables of the enclosing class, but cannot access non-static variables because non-static varibales belong to an instance of the class and not the class itself.
+
+### Shadowing
+Shadowing allows for overlapping scoes of members with the same name and type to exist in both a nested class and the enclosing class simultaneously. The value will depend on which object we use to call it. For example:
+```java
+class Outer {
+  String name = "string_1";
+
+  // Nested inner class
+  class Inner {
+    String name = "string_2";
+
+    public void printTypeMethod() {
+      System.out.println(name);
+      System.out.println(Outer.this.name);
+    }
+  }
+}
+
+class Main {
+  // Main driver method
+  public static void main(String[] args) {
+    Outer outerObj = new Outer();
+    Outer.Inner innerObj  = outerObj.new Inner();
+    innerObj.printTypeMethod();
+  }
+}
+```
+This code will output:
+```
+string_2
+string_1
+```
+
