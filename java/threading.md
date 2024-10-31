@@ -2,7 +2,7 @@
 
 ## Implementing Threading
 
-The `Thread` class is part of the `java.lang` package and can be imported as normal.
+The `Thread` class is part of the `java.lang` package and can be imported as normal. Note that all threads will run *concurrently*, not in parallel.
 
 ### Extending the `Thread` Class
 The first way we can implement threading is by extending the `Thread` class and overriding the `run` method. These are the only two requirements. The `run` method performs the work that the thread is responsible for. To start the thread, create an instance of the class and call the `start` method. For example:
@@ -365,4 +365,38 @@ ScopedValue.where(someString, "StringValue", virtualThread);
 ```
 
 ### Advantages and Disadvantages of Virtual Threads
-Virtual threads have proven to be helpful in applications where several tasks are slated to run concurrently, and each task awaits some form of external response, such as IO or a network call. However, there are situations in which a virtual thread cannot be used. In the case where a thread must run some form of complex calculation, it does not make sense to use a virtual thread because the task will not be idle as the CPU is under constant use. When this is the case, there is no other choice but to rely on a standard platform thread. A second scenario when a virtual thread can’t be used is when a task executes a `synchronized` block of code. A `synchronized` block of code prevents other threads from accessing a specific piece of data in the interest of protecting it from being incorrectly processed. When a virtual thread executes `synchronized` code, the virtual thread cannot be unmounted until the block of code is finished executing, even if the thread is idle. When this happens, we say the virtual thread is pinned to the parent platform thread. When this is the case, we lose the advantages we gain from unmounting an idle thread. In this case, we again are forced to use standard platform threads. 
+Virtual threads have proven to be helpful in applications where several tasks are slated to run concurrently, and each task awaits some form of external response, such as IO or a network call. However, there are situations in which a virtual thread cannot be used. In the case where a thread must run some form of complex calculation, it does not make sense to use a virtual thread because the task will not be idle as the CPU is under constant use. When this is the case, there is no other choice but to rely on a standard platform thread. A second scenario when a virtual thread can’t be used is when a task executes a `synchronized` block of code. A `synchronized` block of code prevents other threads from accessing a specific piece of data in the interest of protecting it from being incorrectly processed. When a virtual thread executes `synchronized` code, the virtual thread cannot be unmounted until the block of code is finished executing, even if the thread is idle. When this happens, we say the virtual thread is pinned to the parent platform thread. When this is the case, we lose the advantages we gain from unmounting an idle thread. In this case, we again are forced to use standard platform threads.
+
+## Thread Pooling
+A thread pool manages a pool of worker threads that connect to a work queue of `Runnable` tasks waiting to be executed. In a thread pool, added threads idle until given work. A Blocking Queue is used to manage this work. Idling threads will process enqueued tasks on a first come first serve basis. Once a thread finishes its task, it simply returns to watching the queue.
+
+### The Executor Framework
+The `Executor` framework implements thread pooling through an `Executor` interface. The `Executor` interfaces include:
+- `Executor`: launch a `Runnable` object task
+- `ExecutorService`: manages the lifecycle of tasks in a sub-interface of `Executor`
+- `ScheduledExecutor`: schedules the execution of tasks in a sub-interface of `ExecutorService`.
+
+To use the `Executor` framework, we will need the following imports:
+```java
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+```
+To use an `Executor`, we need to create an `ExecutorService` object and pass it the number of threads we'll be alloting it:
+```java
+private static final int N = 10;
+ExecutorService executor = Executors.newFixedThreadPool(N);
+```
+To pass tasks to the executor:
+```java
+Runnable task = new RunnableTask(); // RunnableTask is a custom class that implements Runnable
+executor.execute(task);
+```
+To prevent new tasks from being added, call the `shutdown` method:
+```java
+executor.shutdown();
+```
+To wait for the thread pool to finish all of its tasks:
+```java
+executor.awaitTermination(time, timeUnit);
+```
+The `awaitTermination` will wait for an allotted amount of maximum time for the tasks to finish. If they do not finish before the time passes, an `InterruptedExecption` will be thrown
