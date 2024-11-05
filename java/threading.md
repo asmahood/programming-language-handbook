@@ -413,3 +413,30 @@ private static final int N = 4;
 ForkJoinExecutor pool = new ForkJoinPool(N);
 pool.invoke(task);
 ```
+To create parallel processes, in the class that extends `RecursiveAction` or `RecursiveTask` add an override for `protected void compute()`. In this method, create new instances of this class and call `fork` and `join` on these objects:
+```java
+public class RecursivePrime extends RecursiveAction {
+  private BigInteger n;
+  private int k;
+  public boolean result;
+
+  public RecursivePrime(BigInteger n, int k) {
+    this.n = n;
+    this.k = k;
+  }
+
+  @Override
+  protected void compute() {
+    if (k <= 80) {
+      this.result = probablyPrime(n, k);
+    } else {
+      RecursivePrime r1 = new RecursivePrime(n, k / 2);
+      RecursivePrime r2 = new RecursivePrime(n, k / 2);
+      r1.fork();
+      r2.fork();
+      r1.join();
+      r2.join();
+    }
+  }
+}
+```
