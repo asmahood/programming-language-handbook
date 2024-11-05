@@ -400,3 +400,16 @@ To wait for the thread pool to finish all of its tasks:
 executor.awaitTermination(time, timeUnit);
 ```
 The `awaitTermination` will wait for an allotted amount of maximum time for the tasks to finish. If they do not finish before the time passes, an `InterruptedExecption` will be thrown
+
+## The Fork-Join Framework
+The Fork-Join framework was added in Java 7 and includes the functionality to split a task into smaller subtasks and re-enqueue them into the thread pool. The new interface is called `ForkJoinPool` and `ForkJoinExecutor` and is available in the `java.util.concurrent` package. Instead of implementing the `Runnable` class you need to extend either `RecursiveAction` or `RecursiveTask` depending on the implementation wanted.
+
+- `RecursiveAction` - does not return any result
+- `RecursiveTask` - returns a result
+
+Instead of calling `execute`, instead `invoke` needs to be called. Since its splitting a singular task across multiple worker threads, `invoke` only has to be called once:
+```java
+private static final int N = 4;
+ForkJoinExecutor pool = new ForkJoinPool(N);
+pool.invoke(task);
+```
